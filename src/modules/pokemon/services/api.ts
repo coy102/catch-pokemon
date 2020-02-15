@@ -8,7 +8,13 @@ export default function pokemonApi() {
     return res;
   };
 
+  const getPokemonDetail = async nameOrId => {
+    const res = await _api.get(`/pokemon/${nameOrId}`);
+    return res;
+  };
+
   return {
     getPokemonList,
+    getPokemonDetail,
   };
 }
