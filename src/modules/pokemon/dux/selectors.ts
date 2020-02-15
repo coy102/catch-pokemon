@@ -14,7 +14,11 @@ export default function pokemonSelector() {
   const selectPokemonList = () =>
     createSelector(selectPokemon(), state => state.pokemonList);
 
+  const selectPokemonDetail = () =>
+    createSelector(selectPokemon(), state => state.pokemonDetail);
+
   return {
     selectPokemonList,
+    selectPokemonDetail,
   };
 }
