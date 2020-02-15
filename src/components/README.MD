@@ -1,0 +1,3 @@
+# Components
+
+Global components

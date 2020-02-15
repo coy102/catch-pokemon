@@ -1,0 +1,72 @@
+{
+  "name": "my-awesome-pokemon",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node ./server",
+    "test": "jest",
+    "build": "next build ./src",
+    "start": "cross-env NODE_ENV=production node ./server -p $PORT",
+    "lint": "tslint ./src/*.ts{,x}",
+    "tsc": "tsc -p ./src --noEmit",
+    "export": "yarn build && next export"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "@material-ui/lab": "^4.0.0-alpha.36",
+    "axios": "^0.19.0",
+    "axios-mock-adapter": "^1.17.0",
+    "compression": "^1.7.4",
+    "cross-env": "^6.0.3",
+    "dayjs": "^1.8.19",
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.7.0",
+    "express": "^4.17.1",
+    "formik": "^2.0.8",
+    "formik-material-ui": "^1.0.0",
+    "lodash": "^4.17.15",
+    "next": "latest",
+    "next-redux-saga": "4.0.0",
+    "next-redux-wrapper": "2.0.0",
+    "notistack": "^0.9.7",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-redux": "latest",
+    "redux": "4.0.1",
+    "redux-actions": "^2.6.5",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "1.0.1",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
+    "reselect": "^4.0.0",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.24",
+    "@types/lodash": "^4.14.149",
+    "@types/next": "latest",
+    "@types/next-redux-saga": "^3.0.2",
+    "@types/next-redux-wrapper": "^3.0.0",
+    "@types/node": "^12.12.19",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/redux-actions": "^2.6.1",
+    "@types/redux-logger": "^3.0.7",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "jest": "^24.9.0",
+    "prettier": "^1.14.3",
+    "redux-devtools-extension": "^2.13.8",
+    "tslint": "^6.0.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.2.0",
+    "typescript": "latest"
+  }
+}
