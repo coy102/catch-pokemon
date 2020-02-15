@@ -13,8 +13,20 @@ export default function pokemonApi() {
     return res;
   };
 
+  const getPokemonSpecies = async nameOrId => {
+    const res = await _api.get(`/pokemon-species/${nameOrId}`);
+    return res;
+  };
+
+  const universalGetWithUrl = async url => {
+    const res = await _api.get(url);
+    return res;
+  };
+
   return {
     getPokemonList,
     getPokemonDetail,
+    getPokemonSpecies,
+    universalGetWithUrl,
   };
 }
