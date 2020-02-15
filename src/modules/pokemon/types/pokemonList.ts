@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 export interface IPokemons {
   name: string;
   url: string;
@@ -14,3 +16,5 @@ export interface IPokemonsState extends IPokemonsResult {
   pokemons: Array<IPokemons>;
   newPokemons: Array<IPokemons>;
 }
+
+export type IPokemonResponse = AxiosResponse<IPokemonsResult>;
