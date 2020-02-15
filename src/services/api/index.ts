@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-const BASE_URL = 'https://BASE-URL-API.COM/';
+const BASE_URL = 'https://pokeapi.co/api/v2';
 
 type ApiRequest = (
   url: string,
