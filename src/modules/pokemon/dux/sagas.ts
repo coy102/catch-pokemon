@@ -40,18 +40,15 @@ function* getMorePokemonListSaga() {
  * @export
  * @param {*} [action]
  */
-export function* getPokemonListSaga(action?: any) {
+export function* getPokemonListSaga({ payload }: any) {
   try {
-    const { payload: offset } = action;
-    const res: IPokemonResponse = yield call(pokeApi.getPokemonList, offset);
+    const res: IPokemonResponse = yield call(pokeApi.getPokemonList, payload);
     const { results } = res.data;
     yield put(
       getPokemons.success({
         pokemons: results,
       })
     );
-
-    yield put(getPokemons.failure({ message: res.status }));
   } catch (error) {
     yield put(getPokemons.failure({ message: `${error.message}` }));
   }

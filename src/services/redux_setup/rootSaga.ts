@@ -1,8 +1,8 @@
 import { all, fork } from 'redux-saga/effects';
-import { getPokemonListSaga } from '@modules/pokemon/dux/sagas';
+import pokemonSaga from '@modules/pokemon/dux/sagas';
 
 function* sagas() {
-  yield all([fork(getPokemonListSaga)]);
+  yield all([fork(pokemonSaga)]);
 }
 
 export default sagas;
