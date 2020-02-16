@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { Box, Grid } from '@material-ui/core';
 import capitalize from 'lodash/capitalize';
 
-import { getPokemonDetail } from '../../dux/actions';
+import ErrorMessage from '@components/Result/ErrorMessage';
+import { getPokemonDetail, throwPokeBall } from '../../dux/actions';
 import pokemonSelector from '../../dux/selectors';
 import { PokemonDetailState } from '../../types/pokemonDetail';
 import PokeAvatar from './PokeAvatar';
@@ -15,17 +16,22 @@ import PokeStats from './PokeStats';
 import PokeEvolutions from './PokeEvolution';
 import PokeElements from './PokeElements';
 import Loading from './Loading';
-import ErrorMessage from '@components/Result/ErrorMessage';
+import ThrowBall from './ThrowBall';
+import SavePokemonDialog from './SavePokemon';
 
 function PokemonDetailContainer() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { selectPokemonDetail } = pokemonSelector();
+  const { selectPokemonDetail, selectThrowBall } = pokemonSelector();
   const { pokename } = router.query;
 
   const pokemonDetail: PokemonDetailState = useSelector(selectPokemonDetail());
   const { isFetching, pokemon, message } = pokemonDetail;
   const { detail, species, evolutions, elementType } = pokemon;
+
+  const { isThrowing, isCaught, caughtPokemon } = useSelector(
+    selectThrowBall()
+  );
 
   useEffect(() => {
     handleFetchPokemon(pokename);
@@ -33,6 +39,11 @@ function PokemonDetailContainer() {
 
   const handleFetchPokemon = nameOrId =>
     dispatch(getPokemonDetail.request({ nameOrId }));
+
+  const handleThrowBall = () => dispatch(throwPokeBall.request({}));
+
+  const handleOpenDialog = isOpen =>
+    dispatch(throwPokeBall.openNickDialog({ isCaught: isOpen }));
 
   if (isFetching) {
     return <Loading />;
@@ -69,6 +80,17 @@ function PokemonDetailContainer() {
               <PokeStats stats={detail.stats} />
             </Grid>
           </Grid>
+
+          <ThrowBall
+            throwing={isThrowing}
+            onThrowBall={() => handleThrowBall()}
+          />
+          <SavePokemonDialog
+            caughtPokemon={caughtPokemon}
+            isOpen={isCaught}
+            onClickOpen={handleOpenDialog}
+            onSubmit={() => alert('On submit')}
+          />
         </Box>
       )}
     </div>
