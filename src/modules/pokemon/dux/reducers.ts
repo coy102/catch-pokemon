@@ -6,6 +6,10 @@ import {
   GET_POKEMON_DETAIL,
   THROW_BALL,
   OPEN_SETNICK_DIALOG,
+  SET_OWNED_POKEMON,
+  GET_OWNED_POKEMON,
+  REMOVE_OWNED_POKEMON,
+  OPEN_REMOVE_DIALOG,
 } from './constants';
 import { IInitialState } from '../types/state';
 
@@ -27,7 +31,54 @@ const initialState: IInitialState = {
     isThrowing: false,
     caughtPokemon: {},
   },
+  ownedPokemons: {
+    isFetching: true,
+    isPosting: false,
+    isOpenDialog: false,
+    errorMessage: '',
+    pokemons: [],
+  },
 };
+
+const ownedPokemonsReducer = handleActions(
+  {
+    [SET_OWNED_POKEMON.REQUEST]: state => ({ ...state, isPosting: true }),
+    [SET_OWNED_POKEMON.SUCCESS]: state => ({
+      ...state,
+      isPosting: false,
+    }),
+    [SET_OWNED_POKEMON.FAILURE]: state => ({
+      ...state,
+      isPosting: false,
+    }),
+    [GET_OWNED_POKEMON.REQUEST]: state => ({ ...state, isFetching: true }),
+    [GET_OWNED_POKEMON.SUCCESS]: (state, { payload: { pokemons } }) => ({
+      ...state,
+      pokemons,
+      isFetching: false,
+    }),
+    [GET_OWNED_POKEMON.FAILURE]: state => ({
+      ...state,
+      isFetching: false,
+    }),
+    [REMOVE_OWNED_POKEMON.REQUEST]: state => ({
+      ...state,
+      isPosting: true,
+      isOpenDialog: false,
+    }),
+    [REMOVE_OWNED_POKEMON.SUCCESS]: state => ({
+      ...state,
+      isOpenDialog: false,
+      isPosting: false,
+    }),
+
+    [OPEN_REMOVE_DIALOG]: (state, { payload: { isOpenDialog } }) => ({
+      ...state,
+      isOpenDialog,
+    }),
+  },
+  initialState.ownedPokemons
+);
 
 const throwBallReducer = handleActions(
   {
@@ -109,6 +160,7 @@ export const pokemonsReducer = handleActions(
 );
 
 export default combineReducers({
+  ownedPokemons: ownedPokemonsReducer,
   throwBall: throwBallReducer,
   pokemonDetail: pokemonDetailReducer,
   pokemonList: pokemonsReducer,

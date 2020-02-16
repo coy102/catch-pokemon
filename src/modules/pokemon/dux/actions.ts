@@ -5,7 +5,25 @@ import {
   GET_POKEMON_DETAIL,
   THROW_BALL,
   OPEN_SETNICK_DIALOG,
+  GET_OWNED_POKEMON,
+  SET_OWNED_POKEMON,
 } from './constants';
+
+export const getOwnedPokemons = {
+  request: createAction(GET_OWNED_POKEMON.REQUEST),
+  success: createAction(GET_OWNED_POKEMON.SUCCESS),
+  failure: createAction(GET_OWNED_POKEMON.FAILURE),
+};
+
+export const setOwnedPokemons = {
+  request: createAction(
+    SET_OWNED_POKEMON.REQUEST,
+    ({ values }) => values,
+    ({ actions }) => actions
+  ),
+  success: createAction(SET_OWNED_POKEMON.SUCCESS),
+  failure: createAction(SET_OWNED_POKEMON.FAILURE),
+};
 
 export const throwPokeBall = {
   request: createAction(THROW_BALL.REQUEST),
