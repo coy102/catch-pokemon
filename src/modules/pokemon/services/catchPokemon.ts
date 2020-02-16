@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import shortid from 'shortid';
 import { ICaugthPokemon } from '../types/throwBall';
 import { IOwnedPokemonStorage, ICheckedState } from '../types/ownedPokemon';
+import { getOwnedStorage } from './ownedPokemonStorage';
 
 interface IGetOwnedPokemons {
   valid: boolean;
@@ -181,4 +182,27 @@ export function getNewPokemons(args: IArgsSetNewPokemon): IGetOwnedPokemons {
     newPokemons: [],
     message: `You already set nickname ${pokemonNick} to your ${caughtPokemon.name}`,
   };
+}
+
+/**
+ * NOTE: get owns total on pokemon list by pokemon name and base on getOwnedStorage
+ * @export
+ * @param {string} pokemonName
+ * @returns
+ */
+export function getTotalOwnPokemon(pokemonName: string) {
+  const ownedPokemons: Array<IOwnedPokemonStorage> = getOwnedStorage();
+  const filterOwnedPokemons = filteredOwnedPokemon(
+    null,
+    ownedPokemons,
+    pokemonName
+  );
+  if (filterOwnedPokemons) {
+    // if has owned pokemon from function filteredOwnedPokemon to get object of pokemon
+    // and get length of owneds
+    const total = filterOwnedPokemons.owneds.length;
+    return total;
+  }
+  // else return count 0
+  return 0;
 }
