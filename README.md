@@ -1,6 +1,6 @@
 # My Awesome Pokemon
 
-![Image of SS](https://ibb.co/8bcS5LZ)
+![Image of SS](https://i.ibb.co/9nwyYQq/2.png)
 
 Simple React application using Next JS to catch a pokemon
 [Deployed on Herokuapp](https://pokemon-awesome.herokuapp.com)
