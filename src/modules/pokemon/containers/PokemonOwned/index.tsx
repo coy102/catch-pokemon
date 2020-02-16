@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import shortid from 'shortid';
 
-import { getOwnedPokemons } from '../../dux/actions';
+import { getOwnedPokemons, removeOwnedPokemons } from '../../dux/actions';
 import pokemonSelector from '../../dux/selectors';
 import { IOwnedPokemonState } from '../../types/ownedPokemon';
 import ItemList from './ItemList';

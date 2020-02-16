@@ -7,7 +7,16 @@ import {
   OPEN_SETNICK_DIALOG,
   GET_OWNED_POKEMON,
   SET_OWNED_POKEMON,
+  REMOVE_OWNED_POKEMON,
+  OPEN_REMOVE_DIALOG,
 } from './constants';
+
+export const removeOwnedPokemons = {
+  request: createAction(REMOVE_OWNED_POKEMON.REQUEST, ({ params }) => params),
+  success: createAction(REMOVE_OWNED_POKEMON.SUCCESS),
+  failure: createAction(REMOVE_OWNED_POKEMON.FAILURE),
+  openRemoveDialog: createAction(OPEN_REMOVE_DIALOG),
+};
 
 export const getOwnedPokemons = {
   request: createAction(GET_OWNED_POKEMON.REQUEST),
