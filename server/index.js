@@ -24,6 +24,10 @@ app
       return app.render(req, res, '/pokemon/[pokename]', queryParams);
     });
 
+    server.get('/mypokemon', (req, res) => {
+      return app.render(req, res, '/mypokemon', {});
+    });
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });
