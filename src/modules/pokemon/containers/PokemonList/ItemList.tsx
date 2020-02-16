@@ -6,6 +6,7 @@ import { IPokemons } from '../../types/pokemonList';
 import ContentCard from '@components/Card/ContentCard';
 import Link from '@components/Link';
 import { getId } from '@utils/helpers/splitFromUrl';
+import { getTotalOwnPokemon } from '@modules/pokemon/services/catchPokemon';
 
 interface Props {
   pokemons: Array<IPokemons>;
@@ -17,6 +18,8 @@ function ItemList(props: Props) {
   return (
     <Grid spacing={2} container>
       {pokemons.map(pokemon => {
+        const totalOwn = getTotalOwnPokemon(pokemon.name);
+
         return (
           <Grid
             id="grid-pokemons"
@@ -27,7 +30,7 @@ function ItemList(props: Props) {
             xs={6}>
             <Link href="/pokemon/[pokename]" as={`/pokemon/${pokemon.name}`}>
               <ContentCard
-                owned={0}
+                owned={totalOwn}
                 pokemonName={pokemon.name}
                 image={`${process.env.IMAGE_URL}${getId(pokemon.url)}.png`}
               />
