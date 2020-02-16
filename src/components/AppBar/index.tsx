@@ -35,7 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(5),
-    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'none',
+    },
   },
   active: {
     color: '#fff600',
