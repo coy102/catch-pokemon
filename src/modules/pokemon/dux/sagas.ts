@@ -9,6 +9,7 @@ import {
   throwPokeBall,
   setOwnedPokemons,
   getOwnedPokemons,
+  removeOwnedPokemons,
 } from './actions';
 import {
   GET_POKEMON,
@@ -17,6 +18,7 @@ import {
   THROW_BALL,
   SET_OWNED_POKEMON,
   GET_OWNED_POKEMON,
+  REMOVE_OWNED_POKEMON,
 } from './constants';
 import pokemonSelect from './selectors';
 import {
@@ -31,7 +33,51 @@ import { IThrowBall } from '../types/throwBall';
 const { getOwnedStorage, setOwnedStorage } = ownedPokemonStorage;
 const pokeApi = pokemonApi();
 const pokeSelect = pokemonSelect();
-const catchPokemons = catchPokemonService(getOwnedStorage());
+const {
+  getPercentageChance,
+  getNewPokemons,
+  removeOwnedPokemon,
+  removeSelectedPokemon,
+} = catchPokemonService;
+
+/**
+ * remove owned selected or single pokemon on localstorage
+ * @param {*} { payload: params }
+ */
+function* removeOwnedPokemonSaga({ payload: params }: any) {
+  try {
+    yield delay(1000);
+    const { pokemonId, pokemonOwnId, isFromCheckboxes, checkedOwnIds } = params;
+    const ownedPokemons = yield call(getOwnedStorage);
+
+    let removedPokemons = [];
+    if (isFromCheckboxes) {
+      // if using checkboxes or selected pokemon it will process
+      // run oprations removeSelectedPokemon
+      removedPokemons = yield call(
+        removeSelectedPokemon,
+        checkedOwnIds,
+        ownedPokemons
+      );
+    } else {
+      // elese using single or button remove, it will process
+      // run oprations removeOwnedPokemon
+      removedPokemons = yield call(
+        removeOwnedPokemon,
+        pokemonId,
+        pokemonOwnId,
+        ownedPokemons
+      );
+    }
+    // set new pokemon to local storage
+    yield call(setOwnedStorage, removedPokemons);
+    // refresh list or state after setting pokemon to localstorage
+    yield put(getOwnedPokemons.request());
+    yield put(removeOwnedPokemons.success({ isOpenDialog: false }));
+  } catch (error) {
+    yield call(openNotify, error, 'warning');
+  }
+}
 
 /**
  * get owned pokemons from localstorage
@@ -56,9 +102,11 @@ function* setOwnedPokemon({ payload: values, meta: actions }: any) {
   const { setSubmitting } = actions;
   const { pokemonNick } = values;
   const { caughtPokemon } = pokemonState;
+  const ownedPokemons = yield call(getOwnedStorage) || [];
 
-  const newPokemons = catchPokemons.getNewPokemons({
+  const newPokemons = getNewPokemons({
     caughtPokemon,
+    ownedPokemons,
     pokemonNick,
   });
 
@@ -69,7 +117,7 @@ function* setOwnedPokemon({ payload: values, meta: actions }: any) {
     yield put(throwPokeBall.openNickDialog({ isCaught: false }));
     yield put(setOwnedPokemons.success());
     yield call(openNotify, `You saved ${pokemonNick}`, 'default');
-    yield call(Router.push, '/pokemon/owneds');
+    yield call(Router.push, '/mypokemon');
 
     return;
   }
@@ -94,7 +142,7 @@ function* throwBallSaga() {
   const { types, sprites, name, id } = pokemonState.pokemon.detail;
   const caughtPokemon = { types, sprites, name, id };
 
-  const percentage = yield call(catchPokemons.getPercentageChance, 0.5);
+  const percentage = yield call(getPercentageChance, 0.5);
 
   yield delay(1500);
 
@@ -205,6 +253,7 @@ export function* getPokemonListSaga({ payload }: any) {
 
 export default function* pokemonSaga() {
   yield all([
+    takeLatest(REMOVE_OWNED_POKEMON.REQUEST, removeOwnedPokemonSaga),
     takeLatest(GET_OWNED_POKEMON.REQUEST, getOwnedPokemonsSaga),
     takeLatest(SET_OWNED_POKEMON.REQUEST, setOwnedPokemon),
     takeLatest(THROW_BALL.REQUEST, throwBallSaga),
