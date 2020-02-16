@@ -5,10 +5,11 @@ import {
   BottomNavigationAction,
   Badge,
   makeStyles,
+  useMediaQuery,
+  useTheme,
 } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import pokemonSelector from '@modules/pokemon/dux/selectors';
-import { getOwnedPokemons } from '@modules/pokemon/dux/actions';
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -19,17 +20,17 @@ const useStyles = makeStyles(() => ({
 
 function BottomNav() {
   const router = useRouter();
-  const dispatch = useDispatch();
   const classes = useStyles({});
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const { selectCountOwns } = pokemonSelector();
   const [value, setValue] = React.useState('/');
 
   const countOwns = useSelector(selectCountOwns());
-  const fetchOwnedPokemons = () => dispatch(getOwnedPokemons.request());
 
   useEffect(() => {
     setValue(router.asPath);
-    fetchOwnedPokemons();
   }, []);
 
   const handleChangeNav = (_event: React.ChangeEvent<{}>, newValue: string) => {
@@ -38,29 +39,31 @@ function BottomNav() {
   };
 
   return (
-    <BottomNavigation
-      value={value}
-      onChange={handleChangeNav}
-      style={{
-        width: '100%',
-        position: 'fixed',
-        bottom: 0,
-      }}>
-      <BottomNavigationAction
-        label="Pokemon List"
-        value="/"
-        icon={<img className={classes.image} src="/png/smartphone.png" />}
-      />
-      <BottomNavigationAction
-        label="My Pokemon"
-        value="/mypokemon"
-        icon={
-          <Badge badgeContent={countOwns} max={99} color="primary">
-            <img className={classes.image} src="/png/pokeballs.png" />
-          </Badge>
-        }
-      />
-    </BottomNavigation>
+    mobile && (
+      <BottomNavigation
+        value={value}
+        onChange={handleChangeNav}
+        style={{
+          width: '100%',
+          position: 'fixed',
+          bottom: 0,
+        }}>
+        <BottomNavigationAction
+          label="Pokemon List"
+          value="/"
+          icon={<img className={classes.image} src="/png/smartphone.png" />}
+        />
+        <BottomNavigationAction
+          label="My Pokemon"
+          value="/mypokemon"
+          icon={
+            <Badge badgeContent={countOwns} max={99} color="primary">
+              <img className={classes.image} src="/png/pokeballs.png" />
+            </Badge>
+          }
+        />
+      </BottomNavigation>
+    )
   );
 }
 
