@@ -1,6 +1,12 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
-import { GET_POKEMON, GET_MORE_POKEMON, GET_POKEMON_DETAIL } from './constants';
+import {
+  GET_POKEMON,
+  GET_MORE_POKEMON,
+  GET_POKEMON_DETAIL,
+  THROW_BALL,
+  OPEN_SETNICK_DIALOG,
+} from './constants';
 import { IInitialState } from '../types/state';
 
 const initialState: IInitialState = {
@@ -16,7 +22,36 @@ const initialState: IInitialState = {
     message: '',
     pokemon: {},
   },
+  throwBall: {
+    isCaught: false,
+    isThrowing: false,
+    caughtPokemon: {},
+  },
 };
+
+const throwBallReducer = handleActions(
+  {
+    [THROW_BALL.REQUEST]: state => ({ ...state, isThrowing: true }),
+    [THROW_BALL.SUCCESS]: (
+      state,
+      { payload: { isCaught, caughtPokemon } }
+    ) => ({
+      ...state,
+      isCaught,
+      caughtPokemon,
+      isThrowing: false,
+    }),
+    [THROW_BALL.FAILURE]: state => ({
+      ...state,
+      isThrowing: false,
+    }),
+    [OPEN_SETNICK_DIALOG]: (state, { payload: { isCaught } }) => ({
+      ...state,
+      isCaught,
+    }),
+  },
+  initialState.throwBall
+);
 
 const pokemonDetailReducer = handleActions(
   {
@@ -74,6 +109,7 @@ export const pokemonsReducer = handleActions(
 );
 
 export default combineReducers({
+  throwBall: throwBallReducer,
   pokemonDetail: pokemonDetailReducer,
   pokemonList: pokemonsReducer,
 });

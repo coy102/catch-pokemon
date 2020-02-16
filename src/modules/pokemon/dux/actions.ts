@@ -1,5 +1,18 @@
 import { createAction } from 'redux-actions';
-import { GET_POKEMON, GET_MORE_POKEMON, GET_POKEMON_DETAIL } from './constants';
+import {
+  GET_POKEMON,
+  GET_MORE_POKEMON,
+  GET_POKEMON_DETAIL,
+  THROW_BALL,
+  OPEN_SETNICK_DIALOG,
+} from './constants';
+
+export const throwPokeBall = {
+  request: createAction(THROW_BALL.REQUEST),
+  success: createAction(THROW_BALL.SUCCESS),
+  failure: createAction(THROW_BALL.FAILURE),
+  openNickDialog: createAction(OPEN_SETNICK_DIALOG),
+};
 
 export const getPokemonDetail = {
   request: createAction(GET_POKEMON_DETAIL.REQUEST, ({ nameOrId }) => nameOrId),

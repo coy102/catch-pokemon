@@ -1,15 +1,59 @@
-import { call, takeLatest, put, all, select } from 'redux-saga/effects';
+import { call, takeLatest, put, all, select, delay } from 'redux-saga/effects';
 import { openNotify } from '@modules/notify/dux/sagas';
 
-import { getPokemons, getMorePokemons, getPokemonDetail } from './actions';
-import { GET_POKEMON, GET_MORE_POKEMON, GET_POKEMON_DETAIL } from './constants';
+import {
+  getPokemons,
+  getMorePokemons,
+  getPokemonDetail,
+  throwPokeBall,
+} from './actions';
+import {
+  GET_POKEMON,
+  GET_MORE_POKEMON,
+  GET_POKEMON_DETAIL,
+  THROW_BALL,
+} from './constants';
 import pokemonSelect from './selectors';
-import pokemonApi from '../services/api';
+import { catchPokemonService, pokemonApi } from '../services';
 import { IPokemonResponse, IPokemonsState } from '../types/pokemonList';
-import { IPokemon } from '../types/pokemonDetail';
+import { IPokemon, PokemonDetailState } from '../types/pokemonDetail';
 
 const pokeApi = pokemonApi();
 const pokeSelect = pokemonSelect();
+const catchPokemons = catchPokemonService();
+
+/**
+ * throw a ball with 50% chance and copy detail state to caughtPokemon state
+ * for reuse caughtPokemon to setOwnedPokemon
+ * @returns
+ */
+function* throwBallSaga() {
+  const pokemonState: PokemonDetailState = yield select(
+    pokeSelect.selectPokemonDetail()
+  );
+
+  const { types, sprites, name, id } = pokemonState.pokemon.detail;
+  const caughtPokemon = { types, sprites, name, id };
+
+  const percentage = yield call(catchPokemons.getPercentageChance, 0.5);
+
+  yield delay(1500);
+
+  if (percentage) {
+    // if get 50% chance it will set to coughtPokemon state
+    yield put(throwPokeBall.success({ isCaught: true, caughtPokemon }));
+    yield call(openNotify, `Gotcha!`, 'default');
+    return;
+  }
+  yield call(
+    openNotify,
+    `Oops! ${name} broke your poke ball, keep spirit!! `,
+    'default'
+  );
+  yield put(throwPokeBall.failure());
+
+  return;
+}
 
 /**
  * get detail pokemon with name or id pokemon on it
@@ -102,6 +146,7 @@ export function* getPokemonListSaga({ payload }: any) {
 
 export default function* pokemonSaga() {
   yield all([
+    takeLatest(THROW_BALL.REQUEST, throwBallSaga),
     takeLatest(GET_POKEMON_DETAIL.REQUEST, getPokemonDetailSaga),
     takeLatest(GET_MORE_POKEMON.REQUEST, getMorePokemonListSaga),
     takeLatest(GET_POKEMON.REQUEST, getPokemonListSaga),
