@@ -18,6 +18,12 @@ app
       return app.render(req, res, '/');
     });
 
+    server.get('/pokemon/:pokename', (req, res) => {
+      const queryParams = Object.assign({}, req.params, req.query);
+
+      return app.render(req, res, '/pokemon/[pokename]', queryParams);
+    });
+
     server.get('*', (req, res) => {
       return handle(req, res);
     });

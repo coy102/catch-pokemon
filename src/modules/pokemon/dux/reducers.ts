@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
-import { GET_POKEMON, GET_MORE_POKEMON } from './constants';
+import { GET_POKEMON, GET_MORE_POKEMON, GET_POKEMON_DETAIL } from './constants';
 import { IInitialState } from '../types/state';
 
 const initialState: IInitialState = {
@@ -11,7 +11,33 @@ const initialState: IInitialState = {
     newPokemons: [],
     message: '',
   },
+  pokemonDetail: {
+    isFetching: false,
+    message: '',
+    pokemon: {},
+  },
 };
+
+const pokemonDetailReducer = handleActions(
+  {
+    [GET_POKEMON_DETAIL.REQUEST]: state => ({
+      ...state,
+      message: '',
+      isFetching: true,
+    }),
+    [GET_POKEMON_DETAIL.SUCCESS]: (state, { payload: { pokemon } }) => ({
+      ...state,
+      pokemon,
+      isFetching: false,
+    }),
+    [GET_POKEMON_DETAIL.FAILURE]: (state, { payload: { message } }) => ({
+      ...state,
+      message,
+      isFetching: false,
+    }),
+  },
+  initialState.pokemonDetail
+);
 
 export const pokemonsReducer = handleActions(
   {
@@ -48,5 +74,6 @@ export const pokemonsReducer = handleActions(
 );
 
 export default combineReducers({
+  pokemonDetail: pokemonDetailReducer,
   pokemonList: pokemonsReducer,
 });
