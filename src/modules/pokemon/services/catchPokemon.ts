@@ -70,7 +70,7 @@ export default function catchPokemonService(
    * @param {IArgsSetNewPokemon} args
    * {
    *  caughtPokemon: state caughtpokemon,
-   *  ownedPokemons: parameter from list owned pokemons localstorage,
+   *  ownedPokemons: parameter from list owned pokemons localstorage
    *  pokemonNick : nickname pokemon,
    * }
    * @returns {IGetOwnedPokemons}

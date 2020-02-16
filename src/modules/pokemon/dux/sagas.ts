@@ -8,6 +8,7 @@ import {
   getPokemonDetail,
   throwPokeBall,
   setOwnedPokemons,
+  getOwnedPokemons,
 } from './actions';
 import {
   GET_POKEMON,
@@ -15,6 +16,7 @@ import {
   GET_POKEMON_DETAIL,
   THROW_BALL,
   SET_OWNED_POKEMON,
+  GET_OWNED_POKEMON,
 } from './constants';
 import pokemonSelect from './selectors';
 import {
@@ -30,6 +32,19 @@ const { getOwnedStorage, setOwnedStorage } = ownedPokemonStorage;
 const pokeApi = pokemonApi();
 const pokeSelect = pokemonSelect();
 const catchPokemons = catchPokemonService(getOwnedStorage());
+
+/**
+ * get owned pokemons from localstorage
+ */
+function* getOwnedPokemonsSaga() {
+  try {
+    const ownedPokemons = yield call(getOwnedStorage);
+    yield put(getOwnedPokemons.success({ pokemons: ownedPokemons }));
+  } catch (error) {
+    yield call(openNotify, error, 'warning');
+    yield put(getOwnedPokemons.failure());
+  }
+}
 
 /**
  * set or save new pokemon after success catch a pokemon
@@ -190,6 +205,7 @@ export function* getPokemonListSaga({ payload }: any) {
 
 export default function* pokemonSaga() {
   yield all([
+    takeLatest(GET_OWNED_POKEMON.REQUEST, getOwnedPokemonsSaga),
     takeLatest(SET_OWNED_POKEMON.REQUEST, setOwnedPokemon),
     takeLatest(THROW_BALL.REQUEST, throwBallSaga),
     takeLatest(GET_POKEMON_DETAIL.REQUEST, getPokemonDetailSaga),
