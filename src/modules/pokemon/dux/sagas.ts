@@ -1,26 +1,70 @@
 import { call, takeLatest, put, all, select, delay } from 'redux-saga/effects';
 import { openNotify } from '@modules/notify/dux/sagas';
+import Router from 'next/router';
 
 import {
   getPokemons,
   getMorePokemons,
   getPokemonDetail,
   throwPokeBall,
+  setOwnedPokemons,
 } from './actions';
 import {
   GET_POKEMON,
   GET_MORE_POKEMON,
   GET_POKEMON_DETAIL,
   THROW_BALL,
+  SET_OWNED_POKEMON,
 } from './constants';
 import pokemonSelect from './selectors';
-import { catchPokemonService, pokemonApi } from '../services';
+import {
+  catchPokemonService,
+  pokemonApi,
+  ownedPokemonStorage,
+} from '../services';
 import { IPokemonResponse, IPokemonsState } from '../types/pokemonList';
 import { IPokemon, PokemonDetailState } from '../types/pokemonDetail';
+import { IThrowBall } from '../types/throwBall';
 
+const { getOwnedStorage, setOwnedStorage } = ownedPokemonStorage;
 const pokeApi = pokemonApi();
 const pokeSelect = pokemonSelect();
-const catchPokemons = catchPokemonService();
+const catchPokemons = catchPokemonService(getOwnedStorage());
+
+/**
+ * set or save new pokemon after success catch a pokemon
+ * @param {*} { payload: values, meta: actions }
+ * @returns
+ */
+function* setOwnedPokemon({ payload: values, meta: actions }: any) {
+  const pokemonState: IThrowBall = yield select(pokeSelect.selectThrowBall());
+  const { setSubmitting } = actions;
+  const { pokemonNick } = values;
+  const { caughtPokemon } = pokemonState;
+
+  const newPokemons = catchPokemons.getNewPokemons({
+    caughtPokemon,
+    pokemonNick,
+  });
+
+  if (newPokemons.valid) {
+    // if, pokemon valid or dont have any nickname it will save new pokemon
+    yield call(setOwnedStorage, newPokemons.newPokemons);
+    yield call(setSubmitting, false);
+    yield put(throwPokeBall.openNickDialog({ isCaught: false }));
+    yield put(setOwnedPokemons.success());
+    yield call(openNotify, `You saved ${pokemonNick}`, 'default');
+    yield call(Router.push, '/pokemon/owneds');
+
+    return;
+  }
+  // else, already has a nickname, call open notify warning with output message
+  // from getNewPokemons
+  yield call(openNotify, newPokemons.message, 'warning');
+  yield put(setOwnedPokemons.failure());
+  yield call(setSubmitting, false);
+  return;
+}
 
 /**
  * throw a ball with 50% chance and copy detail state to caughtPokemon state
@@ -146,6 +190,7 @@ export function* getPokemonListSaga({ payload }: any) {
 
 export default function* pokemonSaga() {
   yield all([
+    takeLatest(SET_OWNED_POKEMON.REQUEST, setOwnedPokemon),
     takeLatest(THROW_BALL.REQUEST, throwBallSaga),
     takeLatest(GET_POKEMON_DETAIL.REQUEST, getPokemonDetailSaga),
     takeLatest(GET_MORE_POKEMON.REQUEST, getMorePokemonListSaga),

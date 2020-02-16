@@ -5,7 +5,11 @@ import { Box, Grid } from '@material-ui/core';
 import capitalize from 'lodash/capitalize';
 
 import ErrorMessage from '@components/Result/ErrorMessage';
-import { getPokemonDetail, throwPokeBall } from '../../dux/actions';
+import {
+  getPokemonDetail,
+  throwPokeBall,
+  setOwnedPokemons,
+} from '../../dux/actions';
 import pokemonSelector from '../../dux/selectors';
 import { PokemonDetailState } from '../../types/pokemonDetail';
 import PokeAvatar from './PokeAvatar';
@@ -41,6 +45,9 @@ function PokemonDetailContainer() {
     dispatch(getPokemonDetail.request({ nameOrId }));
 
   const handleThrowBall = () => dispatch(throwPokeBall.request({}));
+
+  const handleSetOwnedPokemon = (values, actions) =>
+    dispatch(setOwnedPokemons.request({ values, actions }));
 
   const handleOpenDialog = isOpen =>
     dispatch(throwPokeBall.openNickDialog({ isCaught: isOpen }));
@@ -89,7 +96,7 @@ function PokemonDetailContainer() {
             caughtPokemon={caughtPokemon}
             isOpen={isCaught}
             onClickOpen={handleOpenDialog}
-            onSubmit={() => alert('On submit')}
+            onSubmit={handleSetOwnedPokemon}
           />
         </Box>
       )}
