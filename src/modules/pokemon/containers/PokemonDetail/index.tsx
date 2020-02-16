@@ -41,14 +41,18 @@ function PokemonDetailContainer() {
     handleFetchPokemon(pokename);
   }, [pokename]);
 
+  // handle fetch pokemon redux action
   const handleFetchPokemon = nameOrId =>
     dispatch(getPokemonDetail.request({ nameOrId }));
 
+  // handle throw a ball redux action
   const handleThrowBall = () => dispatch(throwPokeBall.request({}));
 
+  // handle set nickname new pokemon
   const handleSetOwnedPokemon = (values, actions) =>
     dispatch(setOwnedPokemons.request({ values, actions }));
 
+  // handle open dialog after success catched pokemon
   const handleOpenDialog = isOpen =>
     dispatch(throwPokeBall.openNickDialog({ isCaught: isOpen }));
 

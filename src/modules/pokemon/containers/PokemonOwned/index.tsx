@@ -31,6 +31,7 @@ export default function PokemonOwnedContainer() {
 
   const fetchOwnedPokemons = () => dispatch(getOwnedPokemons.request());
 
+  // handle open dialog warning to remove multiple or single pokemon
   const openAlertDialog = pokemon => {
     if (pokemon.isFromCheckboxes) {
       // if removed pokemon from checkboxes it will open Alert with total of selected pokemon
@@ -45,9 +46,11 @@ export default function PokemonOwnedContainer() {
     dispatch(removeOwnedPokemons.openRemoveDialog({ isOpenDialog: true }));
   };
 
+  // handle close dialog
   const closeAlertDialog = () =>
     dispatch(removeOwnedPokemons.openRemoveDialog({ isOpenDialog: false }));
 
+  // handle submit remove pokemon
   const removePokemon = () =>
     dispatch(removeOwnedPokemons.request({ params: removedPokemon }));
 

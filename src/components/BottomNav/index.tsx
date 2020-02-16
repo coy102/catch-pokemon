@@ -18,14 +18,19 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * this bottom navigation only used on mobile device browser
+ * @returns
+ */
 function BottomNav() {
   const router = useRouter();
   const classes = useStyles({});
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const { selectCountOwns } = pokemonSelector();
   const [value, setValue] = React.useState('/');
+
+  // select total count owneds pokemon from redux state
+  const { selectCountOwns } = pokemonSelector();
 
   const countOwns = useSelector(selectCountOwns());
 
@@ -33,6 +38,7 @@ function BottomNav() {
     setValue(router.asPath);
   }, []);
 
+  // handle change set value route path to set in BottomNavigationAction value active class
   const handleChangeNav = (_event: React.ChangeEvent<{}>, newValue: string) => {
     setValue(newValue);
     Router.push(newValue);

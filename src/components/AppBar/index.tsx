@@ -79,6 +79,7 @@ export default function MainAppBar(props: Props) {
   const countOwns = useSelector(selectCountOwns());
 
   useEffect(() => {
+    // Fetch owned total pokemon from my pokemon list
     fetchOwnedPokemons();
   }, []);
 

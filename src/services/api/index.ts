@@ -6,6 +6,11 @@ type ApiRequest = (
   payload?: object
 ) => Promise<AxiosResponse<any>>;
 
+/**
+ * Axios wrapper instance
+ * @export
+ * @class Api
+ */
 export class Api {
   axios: {
     get: ApiRequest;

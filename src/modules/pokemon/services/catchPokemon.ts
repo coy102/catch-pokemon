@@ -185,7 +185,7 @@ export function getNewPokemons(args: IArgsSetNewPokemon): IGetOwnedPokemons {
 }
 
 /**
- * NOTE: get owns total on pokemon list by pokemon name and base on getOwnedStorage
+ * get owns total on pokemon list by pokemon name and base on getOwnedStorage
  * @export
  * @param {string} pokemonName
  * @returns

@@ -18,6 +18,7 @@ function ItemList(props: Props) {
   return (
     <Grid spacing={2} container>
       {pokemons.map(pokemon => {
+        // maping total pokemon from my pokemon list
         const totalOwn = getTotalOwnPokemon(pokemon.name);
 
         return (
