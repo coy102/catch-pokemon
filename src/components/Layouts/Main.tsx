@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Container, Box } from '@material-ui/core';
 
 import AppBar from '../AppBar';
+import BottomNav from '../BottomNav';
 
 interface Props {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export default function MainLayout(props: Props) {
       <Box my={10}>
         <Container maxWidth="md">{children}</Container>
       </Box>
+      <BottomNav />
     </div>
   );
 }
