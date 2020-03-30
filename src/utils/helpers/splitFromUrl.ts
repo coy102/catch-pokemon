@@ -4,3 +4,5 @@ export const getId = url => {
     .filter(el => !!el)
     .pop();
 };
+
+// perubahan 2
