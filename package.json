@@ -30,7 +30,7 @@
     "express": "^4.17.1",
     "formik": "^2.0.8",
     "formik-material-ui": "^1.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "next": "latest",
     "next-redux-saga": "4.0.0",
     "next-redux-wrapper": "2.0.0",
